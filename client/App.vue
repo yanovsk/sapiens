@@ -25,12 +25,13 @@ onBeforeMount(async () => {
   <header>
     <nav>
       <div class="title">
-        <img src="@/assets/images/logo.svg" />
-        <RouterLink :to="{ name: 'Home' }">
-          <h1>Social Media App</h1>
-        </RouterLink>
+        <img src="@/assets/images/sapiens-logo.png" />
+        <RouterLink :to="{ name: 'Home' }"> </RouterLink>
       </div>
       <ul>
+        <li>
+          <RouterLink :to="{ name: 'Feed' }" :class="{ underline: currentRouteName == 'Feed' }"> Feed </RouterLink>
+        </li>
         <li>
           <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
         </li>
@@ -71,7 +72,7 @@ h1 {
 }
 
 img {
-  height: 2em;
+  height: 4em;
 }
 
 a {

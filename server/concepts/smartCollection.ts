@@ -47,7 +47,6 @@ export default class SmartCollectionConcept {
     return { msg: "collection retrieved", smartCollection: SmartCollection };
   }
   async getCollectionIdbyTopic(topic: string) {
-    console.log("searching for", topic);
     const SmartCollection = await this.smartCollections.readOne({ collectionTopic: topic });
     if (SmartCollection === null) {
       throw new NotFoundError("no collection found");

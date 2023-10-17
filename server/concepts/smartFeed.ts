@@ -17,7 +17,7 @@ export default class SmartFeedConcept {
       if (!smartFeed) {
         throw new NotFoundError(`SmartFeed for owner ${owner} not found.`);
       }
-      return { msg: "Filters generated!", smartFeed: smartFeed };
+      return { msg: "Feed has been updated!", smartFeed: smartFeed };
     } catch (error) {
       throw new BadValuesError(`Error updating smart filters for owner ${owner}`);
     }
@@ -48,6 +48,7 @@ export default class SmartFeedConcept {
         return allPosts.map((post) => post.postId);
       }
     } catch (error) {
+      console.log(error);
       throw new NotFoundError(`Error retrieving posts for owner ${owner}`);
     }
   }
