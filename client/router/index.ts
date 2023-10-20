@@ -2,6 +2,7 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
+import AIAssistantView from "../views/AIAssistant.vue";
 import FeedView from "../views/FeedView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -15,6 +16,11 @@ const router = createRouter({
       path: "/",
       name: "Feed",
       component: FeedView,
+    },
+    {
+      path: "/",
+      name: "AIAssistant",
+      component: AIAssistantView,
     },
     {
       path: "/",
