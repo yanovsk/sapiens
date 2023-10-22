@@ -10,7 +10,7 @@ const getAIAssistantDash = async () => {
   apiResponse.value = response.dailyPostsAndMsgs;
 
   const today = new Date().toISOString().split("T")[0];
-  const todayData = apiResponse.value.find((item) => item.date.startsWith(today));
+  const todayData = apiResponse.value.find((item: any) => item.date.startsWith(today));
 
   if (todayData) {
     todayMessage.value = todayData.dailyMessage;

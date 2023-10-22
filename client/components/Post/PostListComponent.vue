@@ -1,21 +1,29 @@
 <script setup lang="ts">
 import CreatePostForm from "@/components/Post/CreatePostForm.vue";
+import { defineProps, onBeforeMount, ref } from "vue";
+
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, ref } from "vue";
 import SearchPostForm from "./SearchPostForm.vue";
 
-const { isLoggedIn } = storeToRefs(useUserStore());
+const props = defineProps({ author: String });
+
+const author = props.author;
+
+const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
+const canCreatePost = ref(currentUsername.value === author);
+
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
 let editing = ref("");
 let searchAuthor = ref("");
 
 async function getPosts(author?: string) {
-  let query: Record<string, string> = author !== undefined ? { author } : {};
+  let query: Record<string, string> = author ? { author } : {};
+  console.log("queryy", author);
   let postResults;
   try {
     postResults = await fetchy("/api/posts", "GET", { query });
@@ -31,13 +39,17 @@ function updateEditing(id: string) {
 }
 
 onBeforeMount(async () => {
-  await getPosts();
+  if (author) {
+    await getPosts(author);
+  } else {
+    await getPosts();
+  }
   loaded.value = true;
 });
 </script>
 
 <template>
-  <section v-if="isLoggedIn">
+  <section v-if="isLoggedIn && canCreatePost">
     <h2>Create a post:</h2>
     <CreatePostForm @refreshPosts="getPosts" />
   </section>

@@ -8,7 +8,7 @@ import { RouterLink, RouterView, useRoute } from "vue-router";
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
 const userStore = useUserStore();
-const { isLoggedIn } = storeToRefs(userStore);
+const { isLoggedIn, currentUsername } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
 
 // Make sure to update the session before mounting the app in case the user is already logged in
@@ -22,7 +22,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <header>
+  <header v-if="isLoggedIn">
     <nav>
       <div class="title">
         <img src="@/assets/images/sapiens-logo.png" />
@@ -31,6 +31,9 @@ onBeforeMount(async () => {
       <ul>
         <li>
           <RouterLink :to="{ name: 'Feed' }" :class="{ underline: currentRouteName == 'Feed' }"> Feed </RouterLink>
+        </li>
+        <li>
+          <RouterLink :to="`/account/${currentUsername}`" :class="{ underline: currentRouteName == 'Account' }"> Account </RouterLink>
         </li>
         <li>
           <RouterLink :to="{ name: 'AIAssistant' }" :class="{ underline: currentRouteName == 'AIAssistant' }"> AI Assistant </RouterLink>

@@ -2,7 +2,9 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
+
 import AIAssistantView from "../views/AIAssistant.vue";
+import AccountView from "../views/AccountView.vue";
 import FeedView from "../views/FeedView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -14,18 +16,27 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "Feed",
-      component: FeedView,
-    },
-    {
-      path: "/",
-      name: "AIAssistant",
-      component: AIAssistantView,
-    },
-    {
-      path: "/",
       name: "Home",
       component: HomeView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/feed",
+      name: "Feed",
+      component: FeedView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/aiassistant",
+      name: "AIAssistant",
+      component: AIAssistantView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/account/:username",
+      name: "Account",
+      component: AccountView,
+      meta: { requiresAuth: true },
     },
     {
       path: "/setting",
@@ -58,6 +69,10 @@ const router = createRouter({
  */
 router.beforeEach((to, from) => {
   const { isLoggedIn } = storeToRefs(useUserStore());
+
+  if (to.path === "/") {
+    return isLoggedIn.value ? { name: "Feed" } : { name: "Login" };
+  }
 
   if (to.meta.requiresAuth && !isLoggedIn.value) {
     return { name: "Login" };
