@@ -1,4 +1,5 @@
 /* Add some global styles here! */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;700&family=Roboto:ital,wght@0,100;0,300;1,100;1,300;1,400&display=swap");
 
 :root {
   --red: rgb(208, 67, 12);
@@ -29,4 +30,28 @@ a.button {
   justify-content: center;
   align-items: center;
   gap: 1em;
+}
+
+body {
+  font-family: "Noto Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.global-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4065f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 100%;
 }

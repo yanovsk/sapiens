@@ -22,7 +22,7 @@ onMounted(() => {
 watch(
   () => route.params.username,
   () => {
-    checkUsername(); // Re-check when the route changes
+    checkUsername();
   },
 );
 </script>
