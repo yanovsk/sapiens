@@ -11,7 +11,7 @@ const isMyAccount = ref(false);
 const route = useRoute();
 
 const checkUsername = () => {
-  const routeUsername = route.params.username;
+  const routeUsername = Array.isArray(route.params.username) ? route.params.username[0] : route.params.username;
   isMyAccount.value = routeUsername === currentUsername.value;
 };
 
@@ -33,7 +33,7 @@ watch(
       <PostListComponent :author="currentUsername" />
     </template>
     <template v-else>
-      <PostListComponent :author="route.params.username" />
+      <PostListComponent :author="Array.isArray(route.params.username) ? route.params.username[0] : route.params.username" />
     </template>
   </div>
 </template>
