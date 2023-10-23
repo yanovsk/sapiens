@@ -3,16 +3,19 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 import { BadValuesError, NotAllowedError, NotFoundError } from "./errors";
 
 export interface UserDoc extends BaseDoc {
+  fullname: string;
+  bio: string;
   username: string;
   password: string;
+  picture: string;
 }
 
 export default class UserConcept {
   public readonly users = new DocCollection<UserDoc>("users");
 
-  async create(username: string, password: string) {
+  async create(fullname: string, bio: string, username: string, password: string, picture: string) {
     await this.canCreate(username, password);
-    const _id = await this.users.createOne({ username, password });
+    const _id = await this.users.createOne({ fullname, bio, username, password, picture });
     return { msg: "User created successfully!", user: await this.users.readOne({ _id }) };
   }
 

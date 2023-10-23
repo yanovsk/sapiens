@@ -5,6 +5,7 @@ const userStore = useUserStore();
 import { useRoute } from "vue-router";
 import { watch, onMounted, ref } from "vue";
 import PostListComponent from "../Post/PostListComponent.vue";
+import BioComponent from "./BioComponent.vue";
 
 const { currentUsername } = storeToRefs(userStore);
 const isMyAccount = ref(false);
@@ -30,9 +31,11 @@ watch(
 <template>
   <div>
     <template v-if="isMyAccount">
+      <BioComponent :username="currentUsername" />
       <PostListComponent :author="currentUsername" />
     </template>
     <template v-else>
+      <BioComponent :username="Array.isArray(route.params.username) ? route.params.username[0] : route.params.username" />
       <PostListComponent :author="Array.isArray(route.params.username) ? route.params.username[0] : route.params.username" />
     </template>
   </div>

@@ -36,10 +36,10 @@ class Routes {
   }
 
   @Router.post("/users")
-  async createUser(session: WebSessionDoc, username: string, password: string) {
+  async createUser(session: WebSessionDoc, fullname: string, bio: string, username: string, password: string, picture: string) {
     WebSession.isLoggedOut(session);
     //also creating feed for this user
-    const user = await User.create(username, password);
+    const user = await User.create(fullname, bio, username, password, picture);
     if (user.user) {
       //as soon as user is created we create an empty smart feed for it
       await SmartFeed.createSmartFeed(user.user._id);

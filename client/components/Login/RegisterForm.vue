@@ -2,15 +2,56 @@
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
+import "../../firebase.ts";
+
+import { ref as firebaseRef, getDownloadURL, getStorage, uploadBytesResumable } from "firebase/storage";
+
+const storage = getStorage();
+const picture = ref("");
+const fileInput = ref(null);
 
 const username = ref("");
 const password = ref("");
+const bio = ref("");
+const fullname = ref("");
 const { createUser, loginUser, updateSession } = useUserStore();
 
+async function handleFileUpload(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  console.log("file 1", file);
+
+  if (file) {
+    console.log("file");
+    const storageRef = firebaseRef(storage, "images/" + file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    await new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => {
+          reject(error);
+        },
+        async () => {
+          resolve(await getDownloadURL(storageRef));
+        },
+      );
+    });
+
+    picture.value = await getDownloadURL(storageRef);
+    console.log("PIC HE", picture.value);
+  }
+}
+
 async function register() {
-  await createUser(username.value, password.value);
+  const fileEvent = {
+    target: fileInput.value,
+  };
+  await handleFileUpload(fileEvent as unknown as Event);
+
+  await createUser(username.value, fullname.value, bio.value, password.value, picture.value);
   await loginUser(username.value, password.value);
-  void updateSession();
+  await updateSession();
   void router.push({ name: "Feed" });
 }
 </script>
@@ -20,11 +61,24 @@ async function register() {
     <fieldset>
       <div class="form-container">
         <div class="pure-control-group">
+          <input v-model.trim="fullname" type="text" id="aligned-name" placeholder="Full Name" required />
+        </div>
+        <div class="pure-control-group">
+          <input v-model.trim="bio" type="text" id="aligned-bio" placeholder="Short Bio (up to 200 chars)" maxlength="200" required />
+        </div>
+        <div class="pure-control-group">
           <input v-model.trim="username" type="text" id="aligned-name" placeholder="Username" required />
         </div>
         <div class="pure-control-group">
           <input type="password" v-model.trim="password" id="aligned-password" placeholder="Password" required />
         </div>
+        <label for="fileInput">Upload Profile Picture:</label>
+        <br />
+        <br />
+
+        <input type="file" ref="fileInput" id="fileInput" />
+        <br />
+
         <div class="button-container">
           <button type="submit" class="login-button">Register</button>
         </div>

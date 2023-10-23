@@ -41,7 +41,7 @@ const showRegister = ref(false);
 .main-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
   background-color: #f0f2f5;
@@ -62,6 +62,7 @@ const showRegister = ref(false);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-bottom: 100px;
 }
 
 .logo {
