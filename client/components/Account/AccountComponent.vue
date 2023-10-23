@@ -17,8 +17,6 @@ const route = useRoute();
 const checkUsername = () => {
   const routeUsername = Array.isArray(route.params.username) ? route.params.username[0] : route.params.username;
   isMyAccount.value = routeUsername === currentUsername.value;
-
-  console.log("COMPARE", routeUsername, currentUsername.value, isMyAccount.value);
 };
 
 // Existing code

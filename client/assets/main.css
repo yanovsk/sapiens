@@ -63,8 +63,20 @@ h6 {
   font-family: "Noto Sans", sans-serif;
 }
 
-.global-button {
+.global-button-blue {
   background-color: #d9cafa;
+  color: black;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: 1px solid black;
+  border-color: black;
+  font-weight: 550;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.global-button-green {
+  background-color: #ffe9d6;
   color: black;
   padding: 14px 20px;
   margin: 8px 0;

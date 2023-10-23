@@ -24,5 +24,4 @@ function updateEditing(id: string) {
       <br />
     </article>
   </section>
-  <p v-if="!posts || posts.length === 0">No posts found</p>
 </template>
