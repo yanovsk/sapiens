@@ -7,6 +7,7 @@ import { PostDoc } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 import { getExpressRouter } from "./framework/router";
+
 import { assignSmartCollection, evaluatePostContent, getDailyContent, getFeedFilters, getSearchTags, getSmartTags } from "./gptHelpers";
 import Responses from "./responses";
 
@@ -92,6 +93,7 @@ class Routes {
     }
     return Responses.posts(posts);
   }
+
   //standard controller for handling user creating new post
   @Router.post("/posts")
   async createPost(session: WebSessionDoc, content: string) {
@@ -173,18 +175,18 @@ class Routes {
     return await Follow.unfollow(followerid, followeeid._id, "user");
   }
 
-  @Router.get("/following/:username")
-  async getUserFollowingById(username: string) {
+  @Router.get("/following/:username/:type")
+  async getUserFollowingById(username: string, type: string) {
     const user = await User.getUserByUsername(username);
     await User.userExists(user._id);
-    return await Follow.getAllFollowing(user._id, "user");
+    return await Follow.getAllFollowing(user._id, type);
   }
 
-  @Router.get("/followers/:username")
-  async getUserFollowersById(username: string) {
+  @Router.get("/followers/:username/:type")
+  async getUserFollowersById(username: string, type: string) {
     const user = await User.getUserByUsername(username);
     await User.userExists(user._id);
-    return await Follow.getAllFollowers(user._id, "user");
+    return await Follow.getAllFollowers(user._id, type);
   }
 
   /**
@@ -200,7 +202,20 @@ class Routes {
   // Get a specific SmartCollection by ID.
   @Router.get("/smartcollection/:collectionname")
   async getSmartCollectionById(collectionname: string) {
-    return await SmartCollection.getByName(collectionname);
+    const smartCollection = await SmartCollection.getByName(collectionname);
+    let posts = [];
+
+    const postsIds = (await SmartCollection.getPostsByName(collectionname)).posts;
+
+    if (postsIds) {
+      posts = await Post.getPostsById(postsIds);
+      console.log("ids", postsIds);
+      console.log("ids", posts);
+    } else {
+      return { msg: `Couldn't retrive posts of the ${collectionname} collection` };
+    }
+
+    return { msg: "collection retrived", smartCollection: smartCollection, posts: posts };
   }
 
   @Router.post("/smartcollection/follow/:collectionname")
@@ -219,15 +234,18 @@ class Routes {
     return await Follow.unfollow(followerId, smartCollection._id, "collection");
   }
 
-  // Get a specific SmartCollection by ID.
-  @Router.get("/smartcollection/posts/:collectionname")
-  async getSmartCollectionPosts(collectionname: string) {
-    return await SmartCollection.getPostsByName(collectionname);
-  }
-
   @Router.get("/smartcollections/all")
   async getAllSmartCollections() {
     return await SmartCollection.getAllSmartCollections();
+  }
+
+  //smartcollections that user follows
+  @Router.get("/smartcollection/following/:username")
+  async getUserFollowingSmartCollections(username: string) {
+    console.log("username", username);
+    const user = await User.getUserByUsername(username);
+    const collectionIds = await Follow.getAllFollowing(user._id, "collection");
+    return await SmartCollection.getUserFollowingSmartCollections(collectionIds);
   }
   /**
    * Smart Feed

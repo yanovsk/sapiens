@@ -5,19 +5,19 @@ import { NotAllowedError, NotFoundError } from "./errors";
 export interface FollowDoc extends BaseDoc {
   follower: ObjectId;
   followee: ObjectId;
-  type: "user" | "collection";
+  type: string;
 }
 
 export default class FollowConcept {
   public readonly following = new DocCollection<FollowDoc>("following");
 
-  async follow(follower: ObjectId, followee: ObjectId, type: "user" | "collection") {
+  async follow(follower: ObjectId, followee: ObjectId, type: string) {
     await this.isNotFollowing(follower, followee, type);
     await this.following.createOne({ follower, followee, type });
     return { msg: "Followed!" };
   }
 
-  async unfollow(follower: ObjectId, followee: ObjectId, type: "user" | "collection") {
+  async unfollow(follower: ObjectId, followee: ObjectId, type: string) {
     const follow = await this.following.popOne({ follower, followee, type });
     if (follow === null) {
       throw new FollowingNotFoundError(follower, followee);
@@ -25,7 +25,7 @@ export default class FollowConcept {
     return { msg: "Unfollowed!" };
   }
 
-  async getAllFollowing(follower: ObjectId, type: "user" | "collection") {
+  async getAllFollowing(follower: ObjectId, type: string) {
     try {
       const followings = await this.following.readMany({ follower, type });
       return followings.map((f) => f.followee);
@@ -34,8 +34,9 @@ export default class FollowConcept {
     }
   }
 
-  async getAllFollowers(followee: ObjectId, type: "user" | "collection") {
+  async getAllFollowers(followee: ObjectId, type: string) {
     try {
+      console.log("type in be", type);
       const followers = await this.following.readMany({ followee, type });
       return followers.map((f) => f.follower);
     } catch (error) {
@@ -43,7 +44,7 @@ export default class FollowConcept {
     }
   }
 
-  private async isNotFollowing(follower: ObjectId, followee: ObjectId, type: "user" | "collection") {
+  private async isNotFollowing(follower: ObjectId, followee: ObjectId, type: string) {
     try {
       if (follower.equals(followee)) {
         throw new SelfFollowError();

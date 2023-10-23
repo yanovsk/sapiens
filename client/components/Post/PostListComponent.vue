@@ -22,7 +22,6 @@ let searchAuthor = ref("");
 
 async function getPosts(author?: string) {
   let query: Record<string, string> = author ? { author } : {};
-  console.log("queryy", author);
   let postResults;
   try {
     postResults = await fetchy("/api/posts", "GET", { query });

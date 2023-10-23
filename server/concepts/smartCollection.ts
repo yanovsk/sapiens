@@ -118,4 +118,11 @@ export default class SmartCollectionConcept {
 
     return SmartCollections;
   }
+
+  async getUserFollowingSmartCollections(collectionIds: ObjectId[]) {
+    const SmartCollections = await this.smartCollections.readMany({
+      _id: { $in: collectionIds },
+    });
+    return SmartCollections;
+  }
 }

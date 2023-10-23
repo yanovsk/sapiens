@@ -34,12 +34,23 @@ export default class PostConcept {
     return posts;
   }
 
-  async getPostById(_id: ObjectId) {
-    const post = await this.posts.readOne({ _id });
-    if (!post) {
-      throw new NotFoundError(`Post with ID ${_id} not found.`);
+  async getPostById(postId: ObjectId) {
+    const posts = await this.posts.readOne({ postId });
+    if (!posts) {
+      throw new NotFoundError(`Post with ID ${postId} not found.`);
     }
-    return post;
+    return posts;
+  }
+
+  async getPostsById(postIds: ObjectId[]) {
+    const posts = await this.posts.readMany({
+      _id: { $in: postIds },
+    });
+    console.log("posts", posts);
+    if (!posts) {
+      throw new NotFoundError(`Post with ID ${postIds} not found.`);
+    }
+    return posts;
   }
 
   async getSmartTagsByPostId(_id: ObjectId) {

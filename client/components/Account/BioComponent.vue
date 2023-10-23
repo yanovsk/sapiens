@@ -50,8 +50,8 @@ async function getUserInfo() {
 
 async function getUserFollows() {
   try {
-    const uFollowing = await fetchy(`/api/following/${currentUsername.value}`, "GET", {});
-    const uFollowers = await fetchy(`/api/followers/${currentUsername.value}`, "GET", {});
+    const uFollowing = await fetchy(`/api/following/${currentUsername.value}/user`, "GET", {});
+    const uFollowers = await fetchy(`/api/followers/${currentUsername.value}/user`, "GET", {});
     following.value = uFollowing;
     followers.value = uFollowers;
   } catch (error) {

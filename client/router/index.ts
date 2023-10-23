@@ -10,6 +10,8 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SettingView from "../views/SettingView.vue";
+import SingleSmartCollectionView from "../views/SingleSmartCollectionView.vue";
+import SmartCollectionsView from "../views/SmartCollectionsView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -30,6 +32,18 @@ const router = createRouter({
       path: "/aiassistant",
       name: "AIAssistant",
       component: AIAssistantView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/smartcollections",
+      name: "SmartCollections",
+      component: SmartCollectionsView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/smartcollection/:collectionname",
+      name: "SmartCollection",
+      component: SingleSmartCollectionView,
       meta: { requiresAuth: true },
     },
     {
