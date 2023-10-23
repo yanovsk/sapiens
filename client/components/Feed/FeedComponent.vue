@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AIFeed from "@/components/Feed/AIFeed.vue";
-import PostComponent from "@/components/Post/PostComponent.vue";
 import { fetchy } from "@/utils/fetchy";
 import { onBeforeMount, reactive, ref } from "vue";
+import PostListComponent from "../Post/PostListComponent.vue";
 
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
@@ -63,10 +63,7 @@ onBeforeMount(async () => {
     <section class="feed-container" v-if="loaded && posts.length !== 0">
       <div class="feed-preference"></div>
       <AIFeed />
-
-      <article v-for="post in posts" :key="post._id" class="post">
-        <PostComponent :post="post" @refreshPosts="getFeed" />
-      </article>
+      <PostListComponent :posts="posts" />
     </section>
     <p v-else-if="loaded">No posts found</p>
     <p v-else>Loading...</p>

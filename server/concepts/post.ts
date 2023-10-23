@@ -46,7 +46,6 @@ export default class PostConcept {
     const posts = await this.posts.readMany({
       _id: { $in: postIds },
     });
-    console.log("posts", posts);
     if (!posts) {
       throw new NotFoundError(`Post with ID ${postIds} not found.`);
     }

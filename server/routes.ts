@@ -91,7 +91,7 @@ class Routes {
     } else {
       posts = await Post.getPosts({});
     }
-    return Responses.posts(posts);
+    return await Responses.posts(posts);
   }
 
   //standard controller for handling user creating new post
@@ -203,19 +203,15 @@ class Routes {
   @Router.get("/smartcollection/:collectionname")
   async getSmartCollectionById(collectionname: string) {
     const smartCollection = await SmartCollection.getByName(collectionname);
-    let posts = [];
 
     const postsIds = (await SmartCollection.getPostsByName(collectionname)).posts;
 
     if (postsIds) {
-      posts = await Post.getPostsById(postsIds);
-      console.log("ids", postsIds);
-      console.log("ids", posts);
+      const posts = await Post.getPostsById(postsIds);
+      return { msg: "collection retrived", smartCollection: smartCollection, posts: await Responses.posts(posts) };
     } else {
       return { msg: `Couldn't retrive posts of the ${collectionname} collection` };
     }
-
-    return { msg: "collection retrived", smartCollection: smartCollection, posts: posts };
   }
 
   @Router.post("/smartcollection/follow/:collectionname")
@@ -260,7 +256,7 @@ class Routes {
     const { allPosts, postsIdandTags } = await Post.getAllPostsOfFollowings(followingsIds);
     const filteredPostsIds = await SmartFeed.getPosts(userId, postsIdandTags);
     const filteredFeed = allPosts.filter((post) => filteredPostsIds.includes(post._id));
-    return Responses.posts(filteredFeed);
+    return await Responses.posts(filteredFeed);
   }
 
   //update filters and return set of posts based on those filters
@@ -281,7 +277,7 @@ class Routes {
     //getting updated filtered feed and returning it back
     const filteredPostsIds = await SmartFeed.getPosts(userId, postsIdandTags);
     const filteredFeed = allPosts.filter((post) => filteredPostsIds.includes(post._id));
-    return Responses.posts(filteredFeed);
+    return await Responses.posts(filteredFeed);
   }
 
   //update filters and return set of posts based on those filters

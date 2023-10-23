@@ -20,12 +20,13 @@ onMounted(async () => {
 
 <template>
   <div>
+    <h3>All Smart Collections</h3>
     <div class="smart-collection-container">
-      <div v-for="collection in userSmartCollections" :key="collection._id" class="smart-collection-block">
+      <router-link v-for="collection in userSmartCollections" :key="collection._id" :to="'/smartcollection/' + collection.collectionName" class="smart-collection-block">
         <h4>{{ collection.collectionTopic }}</h4>
         <p>Tags: {{ Array.isArray(collection.collectionTags) ? collection.collectionTags.join(", ") : "None" }}</p>
         <p>Number of Posts: {{ collection.containedPosts.length }}</p>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -42,5 +43,11 @@ onMounted(async () => {
   padding: 15px;
   border-radius: 8px;
   width: calc(33.333% - 16px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.smart-collection-block:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

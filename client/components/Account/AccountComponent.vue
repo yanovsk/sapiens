@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import CreatePostForm from "@/components/Post/CreatePostForm.vue";
 import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-const userStore = useUserStore();
+import { onBeforeMount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { watch, onMounted, ref } from "vue";
 import PostListComponent from "../Post/PostListComponent.vue";
 import BioComponent from "./BioComponent.vue";
+
+const userStore = useUserStore();
 
 const { currentUsername } = storeToRefs(userStore);
 const isMyAccount = ref(false);
@@ -14,29 +17,51 @@ const route = useRoute();
 const checkUsername = () => {
   const routeUsername = Array.isArray(route.params.username) ? route.params.username[0] : route.params.username;
   isMyAccount.value = routeUsername === currentUsername.value;
+
+  console.log("COMPARE", routeUsername, currentUsername.value, isMyAccount.value);
 };
 
-onMounted(() => {
+// Existing code
+const posts = ref<Array<Record<string, string>>>([]);
+
+// Existing code
+onBeforeMount(async () => {
   checkUsername();
+  await loadPosts();
 });
 
 watch(
   () => route.params.username,
-  () => {
+  async () => {
     checkUsername();
+    await loadPosts();
   },
 );
+
+const loadPosts = async () => {
+  let author = Array.isArray(route.params.username) ? route.params.username[0] : route.params.username;
+  let query: Record<string, string> = author ? { author } : {};
+
+  try {
+    const postResults = await fetchy("/api/posts", "GET", { query });
+    posts.value = postResults;
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <template>
   <div>
     <template v-if="isMyAccount">
+      <h2>Create a post:</h2>
       <BioComponent :username="currentUsername" />
-      <PostListComponent :author="currentUsername" />
+      <CreatePostForm />
+      <PostListComponent v-if="posts.length > 0" :posts="posts" :canEdit="isMyAccount" />
     </template>
     <template v-else>
       <BioComponent :username="Array.isArray(route.params.username) ? route.params.username[0] : route.params.username" />
-      <PostListComponent :author="Array.isArray(route.params.username) ? route.params.username[0] : route.params.username" />
+      <PostListComponent v-if="posts.length > 0" :posts="posts" :canEdit="isMyAccount" />
     </template>
   </div>
 </template>
