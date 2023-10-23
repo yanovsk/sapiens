@@ -6,7 +6,6 @@ import { useUserStore } from "@/stores/user";
 import AIAssistantView from "../views/AIAssistant.vue";
 import AccountView from "../views/AccountView.vue";
 import FeedView from "../views/FeedView.vue";
-import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SettingView from "../views/SettingView.vue";
@@ -17,46 +16,40 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/",
-      name: "Home",
-      component: HomeView,
-      meta: { requiresAuth: true },
-    },
-    {
       path: "/feed",
       name: "Feed",
       component: FeedView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, breadcrumb: "Feed" },
     },
     {
       path: "/aiassistant",
       name: "AIAssistant",
       component: AIAssistantView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, breadcrumb: "AIAssistant" },
     },
     {
       path: "/smartcollections",
       name: "SmartCollections",
       component: SmartCollectionsView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, breadcrumb: "SmartCollections" },
     },
     {
       path: "/smartcollection/:collectionname",
       name: "SmartCollection",
       component: SingleSmartCollectionView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, breadcrumb: "SmartCollection" },
     },
     {
       path: "/account/:username",
       name: "Account",
       component: AccountView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, breadcrumb: "Account" },
     },
     {
       path: "/setting",
       name: "Settings",
       component: SettingView,
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, breadcrumb: "Settings" },
     },
     {
       path: "/login",

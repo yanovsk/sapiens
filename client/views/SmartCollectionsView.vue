@@ -4,10 +4,15 @@ import UserSmartCollectionsComponent from "@/components/SmartCollection/UserSmar
 </script>
 
 <template>
-  <main class="column">
-    <p>User</p>
+  <h3 class="global-title">SmartCollections</h3>
+  <section class="global-page-layout">
     <UserSmartCollectionsComponent />
-    <p>All</p>
     <AllSmartCollectionsComponent />
-  </main>
+  </section>
 </template>
+
+<style scoped>
+.global-page-layout {
+  max-width: 90%;
+}
+</style>

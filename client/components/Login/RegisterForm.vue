@@ -94,22 +94,24 @@ input[type="password"] {
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
-  border: 2px solid #ccc;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 button[type="submit"] {
   width: 100%;
-  background-color: #4065f6;
-  color: white;
+  background-color: #d9cafa;
+  color: black;
   padding: 14px 20px;
   margin: 8px 0;
-  border: none;
-  border-radius: 10px;
+  border: 1px solid black;
+  border-color: black;
+  font-weight: 550;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 button[type="submit"]:hover {
-  background-color: #1f49f2;
+  background-color: #b69bee;
 }
 </style>

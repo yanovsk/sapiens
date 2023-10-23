@@ -52,8 +52,6 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <h3>SmartFeed</h3>
-
     <div class="input-container">
       <input v-model="state.inputValue" placeholder="How would you like to personalize your feed?" />
       <button @click="updateFeedPreference">Submit</button>
@@ -71,13 +69,6 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
-h3 {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1em;
-  font-size: 1.5rem;
-}
-
 .feed-preference {
   display: flex;
   justify-content: space-between;
@@ -87,7 +78,6 @@ h3 {
 }
 
 .feed-container {
-  max-width: 62%;
   margin: 0 auto;
 }
 
@@ -123,13 +113,11 @@ p {
 .input-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  flex-direction: row;
   margin-bottom: 1em;
 }
 
 input {
-  width: 60%;
+  width: 100%;
   padding: 12px;
   font-size: 1rem;
   margin-bottom: 0.5em;

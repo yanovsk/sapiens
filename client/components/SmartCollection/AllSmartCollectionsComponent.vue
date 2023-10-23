@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
+
 import { fetchy } from "../../utils/fetchy";
 
 interface SmartCollection {
@@ -17,19 +18,32 @@ async function getAllSmartCollections() {
   console.log(allSmartCollections.value);
 }
 
+const collectionContainer = ref<HTMLElement | null>(null);
+
 onMounted(async () => {
   await getAllSmartCollections();
+  await nextTick(); // Wait until the DOM updates
+
+  const blocks = collectionContainer.value?.querySelectorAll(".smart-collection-block");
+
+  blocks?.forEach((block) => {
+    const randomColor1 = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    (block as HTMLElement).style.border = `1px solid ${randomColor1}`;
+  });
 });
 </script>
 
 <template>
-  <div>
-    <h3>All Smart Collections</h3>
-    <div class="smart-collection-container">
+  <div v-if="allSmartCollections">
+    <h3>All SmartCollections on Sapiens</h3>
+    <div ref="collectionContainer" class="smart-collection-container">
       <router-link v-for="collection in allSmartCollections" :key="collection._id" :to="'/smartcollection/' + collection.collectionName" class="smart-collection-block">
         <h4>{{ collection.collectionTopic }}</h4>
-        <p>Tags: {{ Array.isArray(collection.collectionTags) ? collection.collectionTags.join(", ") : "None" }}</p>
-        <p>Number of Posts: {{ collection.containedPosts.length }}</p>
+        <div class="smart-collection-tags">
+          <span v-for="tag in collection.collectionTags.slice(0, 3)" :key="tag" class="smart-tag">{{ tag }}</span>
+        </div>
+
+        <p>Posts: {{ collection.containedPosts.length }}</p>
       </router-link>
     </div>
   </div>
@@ -43,12 +57,7 @@ onMounted(async () => {
 }
 
 .smart-collection-block {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
-  width: calc(33.333% - 16px);
-  text-decoration: none;
-  color: inherit;
+  background-size: 100% 100%;
 }
 
 .smart-collection-block:hover {

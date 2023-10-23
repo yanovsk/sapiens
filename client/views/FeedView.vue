@@ -4,8 +4,10 @@ import FeedComponent from "@/components/Feed/FeedComponent.vue";
 
 <template>
   <main>
-    <section></section>
-    <FeedComponent />
+    <h3 class="global-title">SmartFeed</h3>
+    <section class="global-page-layout">
+      <FeedComponent />
+    </section>
   </main>
 </template>
 

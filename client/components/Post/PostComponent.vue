@@ -1,79 +1,118 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
-import { storeToRefs } from "pinia";
+import { defineEmits, defineProps, onMounted, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const props = defineProps(["post"]);
 const emit = defineEmits(["editPost", "refreshPosts"]);
-const { currentUsername } = storeToRefs(useUserStore());
+const { currentUsername } = useUserStore();
 
 const deletePost = async () => {
-  try {
-    await fetchy(`/api/posts/${props.post._id}`, "DELETE");
-  } catch {
-    return;
-  }
+  await fetchy(`/api/posts/${props.post._id}`, "DELETE");
   emit("refreshPosts");
+};
+
+const picLink = ref("");
+const fullName = ref("");
+
+onMounted(async () => {
+  await getAuthorPic();
+});
+
+const getAuthorPic = async () => {
+  const user = await fetchy(`/api/users/${props.post.author}`, "GET");
+  picLink.value = user.picture;
+  fullName.value = user.fullname;
 };
 </script>
 
 <template>
-  <p class="author">{{ props.post.author }}</p>
-  <p>{{ props.post.content }}</p>
-  <div class="base">
-    <menu v-if="props.post.author == currentUsername">
-      <li><button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button></li>
-      <li><button class="button-error btn-small pure-button" @click="deletePost">Delete</button></li>
-    </menu>
-
-    <article class="timestamp">
-      <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
-      <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
-    </article>
-    <br />
-    <br />
-    <article>
-      <div>
-        <p>Tags: {{ props.post.tags.join(", ") }}</p>
+  <div class="post-container">
+    <div class="post-header">
+      <router-link :to="`/account/${props.post.author}`">
+        <img :src="picLink" alt="Profile Picture" class="profile-pic" />
+      </router-link>
+      <div class="post-info">
+        <router-link :to="`/account/${props.post.author}`" class="name-link">{{ fullName }}</router-link>
+        <p class="username">@{{ props.post.author }}</p>
+        <p class="date">{{ formatDate(props.post.dateCreated) }}</p>
       </div>
-    </article>
+    </div>
+    <p class="post-content">{{ props.post.content }}</p>
+    <hr class="divider" />
+    <div class="post-tags">
+      <span v-for="tag in props.post.tags" :key="tag" class="tag">{{ tag }}</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
-p {
-  margin: 0em;
+.post-container {
+  border: 0.3px solid lightgray;
+  background-color: white;
+  padding: 16px;
+  border-radius: 4px;
 }
 
-.author {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-menu {
-  list-style-type: none;
+.post-header {
   display: flex;
-  flex-direction: row;
-  gap: 1em;
-  padding: 0;
-  margin: 0;
 }
 
-.timestamp {
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.post-info {
   display: flex;
-  justify-content: flex-end;
-  font-size: 0.9em;
-  font-style: italic;
+  flex-direction: column;
 }
 
-.base {
+.name-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
+  line-height: 0.1;
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.username {
+  font-weight: 400;
+  line-height: 0.1;
+  margin-bottom: 3px;
+
+  color: gray;
+}
+
+.date {
+  font-weight: 400;
+  color: darkgray;
+  font-size: 12px;
+  margin-bottom: 0px;
+}
+
+.post-content {
+  margin-top: 12px;
+}
+
+.divider {
+  margin: 16px 0;
+  color: lightgray;
+}
+
+.post-tags {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 8px;
 }
 
-.base article:only-child {
-  margin-left: auto;
+.tag {
+  background-color: #f2f2f2;
+  padding: 3px 5px;
+  border-radius: 12px;
+  font-size: 12px;
 }
 </style>

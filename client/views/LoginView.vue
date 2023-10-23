@@ -76,9 +76,16 @@ const showRegister = ref(false);
   font-size: 36px;
 }
 .local-button {
-  width: 55%;
-  color: white;
-  background-color: #26b170;
+  width: 50%;
+  background-color: #ffe9d6;
+  color: black;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: 1px solid black;
+  border-color: black;
+  font-weight: 550;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .feature-list {

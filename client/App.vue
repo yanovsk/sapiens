@@ -55,7 +55,7 @@ onBeforeMount(async () => {
 }
 
 nav {
-  width: 12vh;
+  width: 20vh;
   height: 100vh;
   padding: 1em;
   position: sticky;

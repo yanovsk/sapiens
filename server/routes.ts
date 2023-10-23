@@ -208,7 +208,7 @@ class Routes {
 
     if (postsIds) {
       const posts = await Post.getPostsById(postsIds);
-      return { msg: "collection retrived", smartCollection: smartCollection, posts: await Responses.posts(posts) };
+      return { msg: "collection retrived", smartCollection: smartCollection.smartCollection, posts: await Responses.posts(posts) };
     } else {
       return { msg: `Couldn't retrive posts of the ${collectionname} collection` };
     }
