@@ -5,7 +5,16 @@ import { onMounted, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 const userStore = useUserStore();
 
-const userSmartCollections = ref([]);
+interface SmartCollection {
+  _id: string;
+  collectionName: string;
+  collectionTopic: string;
+  collectionTags: string[];
+  containedPosts: string[];
+}
+
+const userSmartCollections = ref<SmartCollection[]>([]);
+
 const { currentUsername } = storeToRefs(userStore);
 
 async function getUserSmartCollections() {

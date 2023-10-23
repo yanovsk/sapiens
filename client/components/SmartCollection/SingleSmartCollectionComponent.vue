@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { useUserStore } from "@/stores/user";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { fetchy } from "../../utils/fetchy";
 import PostListComponent from "../Post/PostListComponent.vue";
 
-const userStore = useUserStore();
 const smartColl = ref({});
 const smartCollPosts = ref<Array<Record<string, string>>>([]);
 const route = useRoute();
@@ -15,7 +13,8 @@ async function getCollection() {
   const smartCollection = await fetchy(`/api/smartcollection/${collectionname}`, "GET", {});
   smartColl.value = smartCollection.smartCollection;
   smartCollPosts.value = smartCollection.posts;
-  console.log(smartCollPosts.value);
+
+  console.log("HO", smartColl.value, smartCollPosts.value);
 }
 
 onMounted(async () => {
@@ -35,7 +34,7 @@ watch(
     <h3>Smart Collection</h3>
     <p>{{ smartColl }}</p>
     <p>{{ smartCollPosts }}</p>
-    <PostListComponent :posts="smartCollPosts" />
+    <PostListComponent :posts="smartCollPosts" :canEdit="false" />
   </div>
 </template>
 

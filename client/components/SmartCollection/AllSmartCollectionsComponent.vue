@@ -2,7 +2,14 @@
 import { onMounted, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const allSmartCollections = ref([]);
+interface SmartCollection {
+  _id: string;
+  collectionName: string;
+  collectionTopic: string;
+  collectionTags: string[];
+  containedPosts: string[];
+}
+const allSmartCollections = ref<SmartCollection[]>([]);
 
 async function getAllSmartCollections() {
   const smartcollections = await fetchy("/api/smartcollections/all", "GET", {});

@@ -22,7 +22,7 @@ const checkUsername = () => {
 };
 
 // Existing code
-const posts = ref<Array<Record<string, string>>>([]);
+const posts = ref<Array<{ _id: string }>>([]);
 
 // Existing code
 onBeforeMount(async () => {

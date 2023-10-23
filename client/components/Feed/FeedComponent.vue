@@ -63,7 +63,7 @@ onBeforeMount(async () => {
     <section class="feed-container" v-if="loaded && posts.length !== 0">
       <div class="feed-preference"></div>
       <AIFeed />
-      <PostListComponent :posts="posts" />
+      <PostListComponent :posts="posts" :canEdit="false" />
     </section>
     <p v-else-if="loaded">No posts found</p>
     <p v-else>Loading...</p>
