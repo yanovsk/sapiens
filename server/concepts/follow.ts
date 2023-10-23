@@ -28,7 +28,6 @@ export default class FollowConcept {
   async getAllFollowing(follower: ObjectId, type: "user" | "collection") {
     try {
       const followings = await this.following.readMany({ follower, type });
-      console.log("followings", follower);
       return followings.map((f) => f.followee);
     } catch (error) {
       throw new NotFoundError(`Error retrieving followings for user ${follower}`);

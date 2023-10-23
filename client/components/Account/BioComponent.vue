@@ -1,18 +1,45 @@
 <script setup lang="ts">
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 import { defineProps, onMounted, ref, watch } from "vue";
 import { fetchy } from "../../utils/fetchy";
+const userStore = useUserStore();
+const { currentUsername } = storeToRefs(userStore);
 
 const props = defineProps({ username: String });
 const fullName = ref("");
 const bio = ref("");
 const picLink = ref("");
-const followers = ref(0);
-const following = ref(0);
+const followers = ref<string[]>([]);
+const following = ref<string[]>([]);
+const isFollowing = ref(false);
+const followTrigger = ref(0);
+
+async function followUser() {
+  try {
+    await fetchy(`/api/follow/${props.username}`, "POST", {});
+    isFollowing.value = true;
+    followTrigger.value++;
+  } catch (error) {
+    isFollowing.value = false;
+    console.error("Error following user", error);
+  }
+}
+
+async function unfollowUser() {
+  try {
+    await fetchy(`/api/unfollow/${props.username}`, "DELETE", {});
+    isFollowing.value = false;
+    followTrigger.value++;
+  } catch (error) {
+    isFollowing.value = true;
+    console.error("Error unfollowing user", error);
+  }
+}
 
 async function getUserInfo() {
   try {
-    const username = props.username;
-    const fetchedInfo = await fetchy(`/api/users/${username}`, "GET", {});
+    const fetchedInfo = await fetchy(`/api/users/${props.username}`, "GET", {});
     fullName.value = fetchedInfo.fullname;
     bio.value = fetchedInfo.bio;
     picLink.value = fetchedInfo.picture;
@@ -23,12 +50,10 @@ async function getUserInfo() {
 
 async function getUserFollows() {
   try {
-    const username = props.username;
-    const uFollowing = await fetchy(`/api/following/${username}`, "GET", {});
-    const uFollowers = await fetchy(`/api/followers/${username}`, "GET", {});
-    console.log("FOLL", uFollowers, uFollowing);
-    following.value = uFollowing.length;
-    followers.value = uFollowers.length;
+    const uFollowing = await fetchy(`/api/following/${currentUsername.value}`, "GET", {});
+    const uFollowers = await fetchy(`/api/followers/${currentUsername.value}`, "GET", {});
+    following.value = uFollowing;
+    followers.value = uFollowers;
   } catch (error) {
     console.error("Error fetching user info: ", error);
   }
@@ -37,10 +62,14 @@ async function getUserFollows() {
 onMounted(async () => {
   await getUserInfo();
   await getUserFollows();
+  const username = props.username;
+  //getting id by username
+  const user = await fetchy(`/api/users/${username}`, "GET", {});
+  isFollowing.value = following.value.includes(user._id);
 });
 
 watch(
-  () => props.username,
+  () => [props.username, followTrigger.value],
   async () => {
     await getUserInfo();
     await getUserFollows();
@@ -55,9 +84,12 @@ watch(
       <h3 class="profile-name">{{ fullName }}</h3>
       <p class="profile-bio">{{ bio }}</p>
       <div class="profile-follow">
-        <p class="follow-count">Followers: {{ followers }}</p>
-
-        <p class="follow-count">Following: {{ following }}</p>
+        <p class="follow-count">Followers: {{ followers.length }}</p>
+        <p class="follow-count">Following: {{ following.length }}</p>
+      </div>
+      <div v-if="props.username !== currentUsername" class="follow-actions">
+        <button v-if="!isFollowing" @click="followUser">Follow</button>
+        <button v-else @click="unfollowUser">Unfollow</button>
       </div>
     </div>
   </div>
@@ -79,7 +111,9 @@ watch(
   color: #777;
   margin-top: 10px;
 }
-
+.follow-actions {
+  margin-top: 10px;
+}
 .follow-count {
   margin: 0;
   padding: 0;
