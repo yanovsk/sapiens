@@ -225,6 +225,7 @@ export async function getFeedFilters(userQuery: string, allTags: string[]) {
 }
 
 export async function getDailyContent(goal: string) {
+  console.log("GOAL", goal);
   const functions = [
     {
       name: "generateLearningContent",
@@ -262,12 +263,12 @@ export async function getDailyContent(goal: string) {
         {
           role: "system",
           content: `You are a learning content generator bot. Your task is to create a series of 7 learning posts and daily messages 
-          based on a user's weekly learning goal. The posts should be 200-300 words long and should gradually guide the user through the learning topic.
+          based on a user's weekly learning goal. The posts should be 100 words long and should gradually guide the user through the learning topic.
           The daily messages should inform the user of their current progress, anticipate future learnings, and review past contents if applicable.`,
         },
         { role: "user", content: goal },
       ],
-      model: "gpt-4",
+      model: "gpt-4-32k",
       functions: functions,
       function_call: { name: "generateLearningContent" },
     });

@@ -29,7 +29,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <h3>Your SmartCollections</h3>
+    <h3>Followed SmartCollections</h3>
     <div class="smart-collection-container">
       <router-link v-for="collection in userSmartCollections" :key="collection._id" :to="'/smartcollection/' + collection.collectionName" class="smart-collection-block">
         <h4>{{ collection.collectionTopic }}</h4>

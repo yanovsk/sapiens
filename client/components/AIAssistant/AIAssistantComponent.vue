@@ -23,8 +23,8 @@ onMounted(async () => {
 const sendMessage = async () => {
   updating.value = true;
   messages.value.push({ sender: "assistant", text: "Updating learning goal" });
-  userMessage.value = "";
   const response = await fetchy("/api/aiassistant/setgoal", "POST", { body: { goal: userMessage.value } });
+  userMessage.value = "";
   updating.value = false;
   messages.value.pop();
   messages.value.push({ sender: "assistant", text: "Learning goal updated" });

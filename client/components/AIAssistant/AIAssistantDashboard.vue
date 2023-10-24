@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AIAssistantComponent from "@/components/AIAssistant/AIAssistantComponent.vue";
 import { onMounted, ref } from "vue";
 
 import { fetchy } from "../../utils/fetchy";
@@ -27,6 +28,8 @@ onMounted(async () => {
 </script>
 
 <template>
+  <AIAssistantComponent @goal-updated="getAIAssistantDash" />
+
   <div v-if="todayMessage">
     <h3>Current Learning Cycle</h3>
     <p>
