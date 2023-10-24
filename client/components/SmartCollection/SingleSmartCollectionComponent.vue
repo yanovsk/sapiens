@@ -91,10 +91,10 @@ watch(
     <br />
     <div class="smart-collection-feed">
       <div class="feed-row">
-        <PostListComponent :posts="smartCollPosts.slice(smartCollPosts.length / 2)" :canEdit="false" />
+        <PostListComponent @refreshPosts="getCollection" :posts="smartCollPosts.slice(smartCollPosts.length / 2)" :canEdit="false" />
       </div>
       <div class="feed-row">
-        <PostListComponent :posts="smartCollPosts.slice(0, smartCollPosts.length / 2)" :canEdit="false" />
+        <PostListComponent @refreshPosts="getCollection" :posts="smartCollPosts.slice(0, smartCollPosts.length / 2)" :canEdit="false" />
       </div>
     </div>
   </div>

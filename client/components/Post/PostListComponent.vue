@@ -17,7 +17,6 @@ function updateEditing(id: string) {
 }
 
 function refreshPosts() {
-  console.log("refreshing here");
   emit("refreshPosts");
 }
 </script>

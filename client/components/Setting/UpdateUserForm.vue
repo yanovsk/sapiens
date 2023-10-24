@@ -1,17 +1,45 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
 import { useUserStore } from "@/stores/user";
+import { validateInput, validateName } from "@/utils/validators";
+import { ref } from "vue";
 
 import { handleFileUpload } from "../../utils/handleFileUpload";
 const picture = ref("");
 const fileInput = ref(null);
-let username = ref("");
-let password = ref("");
-let fullname = ref("");
-
-let bio = ref("");
+const username = ref("");
+const password = ref("");
+const fullname = ref("");
+const errorMessage = ref("");
+const bio = ref("");
 const { updateUser, updateSession } = useUserStore();
+
+function performValidation(inputText: string, field: string) {
+  let isValid = false;
+  let message = "";
+
+  switch (field) {
+    case "Full name":
+      ({ isValid, message } = validateName(inputText));
+      break;
+    default:
+      ({ isValid, message } = validateInput(inputText));
+      break;
+  }
+
+  if (!isValid) {
+    errorMessage.value = `${field}: ${message}`;
+  }
+
+  return isValid;
+}
+
+async function updateName() {
+  if (performValidation(fullname.value, "Full name")) {
+    await updateUser({ fullname: fullname.value });
+    await updateSession();
+    fullname.value = "";
+  }
+}
 
 async function updateUsername() {
   await updateUser({ username: username.value });
@@ -25,16 +53,12 @@ async function updatePassword() {
   password.value = "";
 }
 
-async function updateName() {
-  await updateUser({ fullname: fullname.value });
-  await updateSession();
-  fullname.value = "";
-}
-
 async function updateBio() {
-  await updateUser({ bio: bio.value });
-  await updateSession();
-  bio.value = "";
+  if (performValidation(bio.value, "Bio")) {
+    await updateUser({ bio: bio.value });
+    await updateSession();
+    bio.value = "";
+  }
 }
 
 async function updatePicture() {
@@ -52,7 +76,7 @@ async function updatePicture() {
 
 <template>
   <h2>Update account details</h2>
-
+  <span>{{ errorMessage }}</span>
   <form @submit.prevent="updateName" class="pure-form">
     <fieldset>
       <legend>Change your name</legend>

@@ -5,10 +5,8 @@ const storage = getStorage();
 
 export async function handleFileUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0];
-  console.log("file 1", file);
 
   if (file) {
-    console.log("file");
     const storageRef = firebaseRef(storage, "images/" + file.name);
     const uploadTask = uploadBytesResumable(storageRef, file);
 

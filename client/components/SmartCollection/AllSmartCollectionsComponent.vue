@@ -15,7 +15,6 @@ const allSmartCollections = ref<SmartCollection[]>([]);
 async function getAllSmartCollections() {
   const smartcollections = await fetchy("/api/smartcollections/all", "GET", {});
   allSmartCollections.value = smartcollections;
-  console.log(allSmartCollections.value);
 }
 
 const collectionContainer = ref<HTMLElement | null>(null);

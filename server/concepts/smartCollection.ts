@@ -37,21 +37,21 @@ export default class SmartCollectionConcept {
     if (SmartCollection === null) {
       throw new NotFoundError("no collection found");
     }
-    return { msg: "collection retrieved", smartCollection: SmartCollection };
+    return { smartCollection: SmartCollection };
   }
   async getByName(name: string) {
     const SmartCollection = await this.smartCollections.readOne({ collectionName: name });
     if (SmartCollection === null) {
       throw new NotFoundError("no collection found");
     }
-    return { msg: "collection retrieved", smartCollection: SmartCollection };
+    return { smartCollection: SmartCollection };
   }
   async getCollectionIdbyTopic(topic: string) {
     const SmartCollection = await this.smartCollections.readOne({ collectionTopic: topic });
     if (SmartCollection === null) {
       throw new NotFoundError("no collection found");
     }
-    return { msg: "collection retrieved", _id: SmartCollection._id };
+    return { _id: SmartCollection._id };
   }
   async addPostToCollection(collectionId: ObjectId, postId: ObjectId) {
     try {
@@ -59,7 +59,7 @@ export default class SmartCollectionConcept {
       const validatedPosts = posts ?? [];
       const updatedPosts = [...validatedPosts, postId];
       await this.smartCollections.updateOne({ _id: collectionId }, { containedPosts: updatedPosts });
-      return { msg: "Collection retrieved", posts: await this.getPostsById(collectionId) };
+      return { posts: await this.getPostsById(collectionId) };
     } catch (error) {
       throw new BadValuesError(`Error adding post to collection: `);
     }
@@ -70,7 +70,7 @@ export default class SmartCollectionConcept {
     if (SmartCollection === null) {
       throw new NotFoundError("no collection found");
     }
-    return { msg: "collection retrieved", _id: SmartCollection._id };
+    return { _id: SmartCollection._id };
   }
 
   async collectionExistsById(_id: ObjectId) {

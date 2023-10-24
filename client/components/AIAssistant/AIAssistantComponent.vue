@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { validateInput } from "@/utils/validators";
 import { onMounted, ref } from "vue";
 
+import { sleep } from "openai/core";
 import { fetchy } from "../../utils/fetchy";
 const updating = ref(false);
 const emit = defineEmits(["goalUpdated"]);
 
 const userMessage = ref("");
+const errorMessage = ref("");
 const messages = ref<Array<{ sender: "user" | "assistant"; text: string }>>([]);
 const combinedMessages = [
   "Ready to embark on a new learning journey? This chat helps you dive deep into any topic. Just say 'I want to learn about rockets', and I'll guide you through a 7-day tailored plan.",
@@ -21,17 +24,32 @@ onMounted(async () => {
 });
 
 const sendMessage = async () => {
+  errorMessage.value = "";
   updating.value = true;
   messages.value.push({ sender: "assistant", text: "Updating learning goal" });
-  const response = await fetchy("/api/aiassistant/setgoal", "POST", { body: { goal: userMessage.value } });
-  userMessage.value = "";
-  updating.value = false;
-  messages.value.pop();
-  messages.value.push({ sender: "assistant", text: "Learning goal updated" });
-  emit("goalUpdated", userMessage.value);
+  await sleep(350);
+  messages.value.push({ sender: "assistant", text: "(this might take up to 65 sec)" });
 
-  return response.msg;
+  try {
+    await fetchy("/api/aiassistant/setgoal", "POST", { body: { goal: userMessage.value } });
+    userMessage.value = "";
+    messages.value.pop();
+    messages.value.push({ sender: "assistant", text: "Learning goal updated" });
+    emit("goalUpdated", userMessage.value);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    updating.value = false;
+  }
 };
+
+function performValidation() {
+  const { isValid, message } = validateInput(userMessage.value);
+  if (!isValid) {
+    errorMessage.value = isValid ? "" : message;
+  }
+  return isValid;
+}
 </script>
 
 <template>
@@ -48,8 +66,9 @@ const sendMessage = async () => {
     </div>
     <div class="input-container">
       <input type="text" v-model="userMessage" @keyup.enter="sendMessage" placeholder="Type what you want to learn about..." />
-      <button class="global-button-green" @click="sendMessage">Send</button>
+      <button class="global-button-green" @click="performValidation() && sendMessage()">Send</button>
     </div>
+    <span class="error-message">{{ errorMessage }}</span>
   </div>
 </template>
 

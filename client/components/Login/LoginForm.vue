@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+
 import { ref } from "vue";
 
 const username = ref("");
 const password = ref("");
+const errorMessage = ref("");
 const { loginUser, updateSession } = useUserStore();
 
 async function login() {
-  await loginUser(username.value, password.value);
-  await updateSession();
-  void router.push({ name: "Feed" });
+  try {
+    const logindata = await loginUser(username.value, password.value);
+    console.log(logindata);
+    await updateSession();
+    void router.push({ name: "Feed" });
+  } catch (error) {
+    console.log("Login Error:", error);
+    errorMessage.value = "⚠️ Username or password is incorrect";
+  }
 }
 </script>
 
@@ -27,6 +35,7 @@ async function login() {
         <div class="button-container">
           <button type="submit" class="login-button">Log In</button>
         </div>
+        <p>{{ errorMessage }}</p>
       </div>
     </fieldset>
   </form>

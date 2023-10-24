@@ -208,7 +208,7 @@ class Routes {
 
     if (postsIds) {
       const posts = await Post.getPostsById(postsIds);
-      return { msg: "collection retrived", smartCollection: smartCollection.smartCollection, posts: await Responses.posts(posts) };
+      return { smartCollection: smartCollection.smartCollection, posts: await Responses.posts(posts) };
     } else {
       return { msg: `Couldn't retrive posts of the ${collectionname} collection` };
     }
@@ -238,7 +238,6 @@ class Routes {
   //smartcollections that user follows
   @Router.get("/smartcollection/following/:username")
   async getUserFollowingSmartCollections(username: string) {
-    console.log("username", username);
     const user = await User.getUserByUsername(username);
     const collectionIds = await Follow.getAllFollowing(user._id, "collection");
     return await SmartCollection.getUserFollowingSmartCollections(collectionIds);
@@ -265,7 +264,6 @@ class Routes {
   async updateSmartFeed(session: WebSessionDoc, userQuery: string) {
     //getting all the tags from the posts in the user's feed
 
-    console.log("query", userQuery);
     const userId = WebSession.getUser(session);
     const followingsIds = await Follow.getAllFollowing(userId, "user");
     const { allPosts, postsIdandTags } = await Post.getAllPostsOfFollowings(followingsIds);

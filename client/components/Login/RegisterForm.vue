@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { validateInput, validateName } from "@/utils/validators";
 import { ref } from "vue";
 import { handleFileUpload } from "../../utils/handleFileUpload";
 
@@ -12,23 +13,51 @@ const password = ref("");
 const bio = ref("");
 const fullname = ref("");
 const { createUser, loginUser, updateSession } = useUserStore();
+const errorMessage = ref("");
+
+function performValidation(inputText: string, field: string) {
+  let isValid = false;
+  let message = "";
+
+  switch (field) {
+    case "Full name":
+      ({ isValid, message } = validateName(inputText));
+      break;
+    default:
+      ({ isValid, message } = validateInput(inputText));
+      break;
+  }
+
+  if (!isValid) {
+    errorMessage.value = `${field}: ${message}`;
+  }
+
+  return isValid;
+}
 
 async function register() {
-  const fileEvent = {
-    target: fileInput.value,
-  };
-  const picUrl = await handleFileUpload(fileEvent as unknown as Event);
-  if (picUrl) picture.value = picUrl;
-
-  await createUser(username.value, fullname.value, bio.value, password.value, picture.value);
-  await loginUser(username.value, password.value);
-  await updateSession();
-  void router.push({ name: "Feed" });
+  if (performValidation(fullname.value, "Full name") && performValidation(bio.value, "Bio")) {
+    const fileEvent = {
+      target: fileInput.value,
+    };
+    const picUrl = await handleFileUpload(fileEvent as unknown as Event);
+    if (picUrl) picture.value = picUrl;
+    try {
+      await createUser(username.value, fullname.value, bio.value, password.value, picture.value);
+      await loginUser(username.value, password.value);
+      await updateSession();
+      void router.push({ name: "Feed" });
+    } catch (e) {
+      console.log(e);
+      errorMessage.value = "⚠️ Username already exists or not allowed";
+    }
+  }
 }
 </script>
 
 <template>
   <form class="pure-form pure-form-aligned" @submit.prevent="register">
+    <span>{{ errorMessage }}</span>
     <fieldset>
       <div class="form-container">
         <div class="pure-control-group">
@@ -47,7 +76,7 @@ async function register() {
         <br />
         <br />
 
-        <input type="file" ref="fileInput" id="fileInput" />
+        <input type="file" ref="fileInput" id="fileInput" required />
         <br />
 
         <div class="button-container">

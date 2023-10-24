@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import AIFeed from "@/components/Feed/AIFeed.vue";
 import { fetchy } from "@/utils/fetchy";
+import { validateInput } from "@/utils/validators";
 import { onBeforeMount, reactive, ref } from "vue";
 import PostListComponent from "../Post/PostListComponent.vue";
 
 const loaded = ref(false);
 let posts = ref<Array<Record<string, string>>>([]);
+const errorMessage = ref("");
 
 const state = reactive({
   inputValue: "",
@@ -16,13 +18,13 @@ async function updateFeedPreference() {
   let userQuery = state.inputValue;
 
   let query: Record<string, string> = { userQuery };
-
   try {
     const response = await fetchy("/api/smartfeed/update", "POST", { query });
     posts.value = response;
   } catch (error) {
     console.error(error);
   } finally {
+    errorMessage.value = "";
     loaded.value = true;
   }
 }
@@ -44,6 +46,14 @@ async function resetFeed() {
   }
 }
 
+function performValidation() {
+  const { isValid, message } = validateInput(state.inputValue);
+  if (!isValid) {
+    errorMessage.value = isValid ? "" : message;
+  }
+  return isValid;
+}
+
 onBeforeMount(async () => {
   await getFeed();
   loaded.value = true;
@@ -52,11 +62,19 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <div class="input-container">
-      <input v-model="state.inputValue" placeholder="How would you like to personalize your feed?" />
-      <button @click="updateFeedPreference">Submit</button>
-      <button @click="resetFeed">Reset Feed</button>
+    <div class="feed-personalization">
+      <div class="header-and-reset">
+        <h3 class="personalize-header">Personalize SmartFeed</h3>
+        <button class="reset-btn" @click="resetFeed">Reset to default</button>
+      </div>
+
+      <div class="input-container">
+        <input v-model="state.inputValue" placeholder="Personalize your feed: e.g., 'Don't show AI-related posts'" required />
+        <button class="global-button-blue local-btn" @click="performValidation() && updateFeedPreference()">Submit</button>
+      </div>
+      <span class="error-message">{{ errorMessage }}</span>
     </div>
+    <h3>Recent Posts</h3>
 
     <section class="feed-container" v-if="loaded && posts.length !== 0">
       <div class="feed-preference"></div>
@@ -77,8 +95,43 @@ onBeforeMount(async () => {
   width: 1rem;
 }
 
+.feed-personalization {
+  display: flex;
+  flex-direction: column;
+}
+
 .feed-container {
   margin: 0 auto;
+}
+
+.header-and-reset {
+  display: flex;
+  flex-direction: row;
+}
+.reset-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: rgb(158, 6, 6);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.personalize-header {
+  width: 85%;
+}
+.input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1em;
+}
+
+.local-btn {
+  margin-top: 0;
+  padding: 15px 20px 15px;
+  font-size: 1rem;
+  border-radius: 4px;
 }
 
 .post {
@@ -89,7 +142,6 @@ onBeforeMount(async () => {
   margin-bottom: 1em;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .post-title {
   font-size: 1.2rem;
   font-weight: bold;
@@ -108,12 +160,6 @@ p {
   text-align: center;
   font-size: 1.2rem;
   margin-top: 1em;
-}
-
-.input-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1em;
 }
 
 input {

@@ -4,8 +4,6 @@ import { fetchy } from "../../utils/fetchy";
 
 const apiResponse = ref();
 const todaysPost = ref("");
-const picLink = ref("");
-const fullName = ref("");
 
 const getAIDailyPost = async () => {
   const response = await fetchy("/api/aiassistant", "GET");
@@ -25,7 +23,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="post-container">
+  <div v-if="todaysPost" class="post-container">
     <div class="post-header">
       <img src="../../assets/images/ai.png" alt="Profile Picture" class="profile-pic" />
       <div class="post-info">

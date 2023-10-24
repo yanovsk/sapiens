@@ -169,8 +169,6 @@ export async function assignSmartCollection(collectionsList: string[], user_inpu
 }
 
 export async function getFeedFilters(userQuery: string, allTags: string[]) {
-  console.log(userQuery);
-
   const functions = [
     {
       name: "extractForbiddenTags",
@@ -212,7 +210,6 @@ export async function getFeedFilters(userQuery: string, allTags: string[]) {
     });
 
     const responseMessage = response.choices[0].message;
-    console.log(responseMessage);
 
     if (responseMessage.function_call) {
       const functionArgs = JSON.parse(responseMessage.function_call.arguments);
@@ -225,7 +222,6 @@ export async function getFeedFilters(userQuery: string, allTags: string[]) {
 }
 
 export async function getDailyContent(goal: string) {
-  console.log("GOAL", goal);
   const functions = [
     {
       name: "generateLearningContent",
@@ -286,7 +282,6 @@ export async function getDailyContent(goal: string) {
 }
 
 export async function getSearchTags(allTags: string[], query: string) {
-  console.log("TAGS", allTags);
   const functions = [
     {
       name: "selectRelevantTags",
@@ -331,7 +326,7 @@ export async function getSearchTags(allTags: string[], query: string) {
     const responseMessage = response.choices[0].message;
     if (responseMessage.function_call) {
       const functionArgs = JSON.parse(responseMessage.function_call.arguments);
-      console.log(responseMessage);
+
       return functionArgs.searchTags;
     }
   } catch (error) {

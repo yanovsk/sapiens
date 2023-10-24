@@ -36,7 +36,6 @@ export default class FollowConcept {
 
   async getAllFollowers(followee: ObjectId, type: string) {
     try {
-      console.log("type in be", type);
       const followers = await this.following.readMany({ followee, type });
       return followers.map((f) => f.follower);
     } catch (error) {
