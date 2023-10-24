@@ -9,7 +9,7 @@ const showRegister = ref(false);
 <template>
   <main class="main-container">
     <div class="logo-container">
-      <img src="../assets/images/sapiens-logo.png" alt="Social Media Logo" class="logo" />
+      <img src="../assets/images/sapiens-box.png" alt="Social Media Logo" class="logo" />
     </div>
     <div class="sections">
       <div class="left-section">

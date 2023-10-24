@@ -127,7 +127,7 @@ class Routes {
         return { msg: createdPost.msg, post: await Responses.post(createdPost.post), tags: tags, smartCollections: smartCollections };
       }
     } else {
-      return { msg: "post is not educational. rewrite it" };
+      return { msg: "AI classified your post not educational. Please rewrite it." };
     }
   }
 

@@ -82,7 +82,7 @@ h1 {
 }
 
 img {
-  height: 3.5em;
+  height: 2em;
 }
 
 a {
