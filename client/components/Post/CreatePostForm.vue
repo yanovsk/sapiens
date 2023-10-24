@@ -6,6 +6,16 @@ const content = ref("");
 const emit = defineEmits(["refreshPosts"]);
 const isLoading = ref(false);
 
+const placeholders = [
+  "Share an academic discovery that fascinated you",
+  "Explain a complex topic you understand well",
+  "Pose a challenging question and your take on it",
+  "Summarize a research paper you found insightful",
+  "Describe an educational experience that changed your perspective",
+];
+const randomIndex = Math.floor(Math.random() * placeholders.length);
+const selectedPlaceholder = ref("Write your new educational post here!  \n\n💡Random Idea: " + placeholders[randomIndex]);
+
 const createPost = async (content: string) => {
   isLoading.value = true;
   try {
@@ -28,8 +38,8 @@ const emptyForm = () => {
 
 <template>
   <form @submit.prevent="createPost(content)">
-    <textarea id="content" v-model="content" placeholder="Create a post!" required></textarea>
-    <button v-if="!isLoading" type="submit" class="pure-button-primary pure-button">Create Post</button>
+    <textarea id="content" v-model="content" :placeholder="selectedPlaceholder" required></textarea>
+    <button v-if="!isLoading" type="submit" class="global-button-blue-border">Create Post</button>
     <div v-else class="pulsate">AI is analyzing your post...</div>
   </form>
   <hr />
@@ -51,8 +61,8 @@ textarea {
   font-family: inherit;
   border: 0.3px solid lightgray;
 
-  font-size: inherit;
-  height: 6em;
+  font-size: 14px;
+  height: 10em;
   padding: 0.5em;
   border-radius: 4px;
   resize: none;
@@ -65,23 +75,5 @@ hr {
 button {
   width: 25%;
   align-self: flex-end;
-}
-
-.pulsate {
-  width: 25%;
-  align-self: flex-end;
-  animation: pulsate 1.5s infinite ease-in-out;
-}
-
-@keyframes pulsate {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 </style>

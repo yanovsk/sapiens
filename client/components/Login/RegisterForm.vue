@@ -2,11 +2,8 @@
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { ref } from "vue";
-import "../../firebase.ts";
+import { handleFileUpload } from "../../utils/handleFileUpload";
 
-import { ref as firebaseRef, getDownloadURL, getStorage, uploadBytesResumable } from "firebase/storage";
-
-const storage = getStorage();
 const picture = ref("");
 const fileInput = ref(null);
 
@@ -16,38 +13,12 @@ const bio = ref("");
 const fullname = ref("");
 const { createUser, loginUser, updateSession } = useUserStore();
 
-async function handleFileUpload(event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  console.log("file 1", file);
-
-  if (file) {
-    console.log("file");
-    const storageRef = firebaseRef(storage, "images/" + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    await new Promise((resolve, reject) => {
-      uploadTask.on(
-        "state_changed",
-        null,
-        (error) => {
-          reject(error);
-        },
-        async () => {
-          resolve(await getDownloadURL(storageRef));
-        },
-      );
-    });
-
-    picture.value = await getDownloadURL(storageRef);
-    console.log("PIC HE", picture.value);
-  }
-}
-
 async function register() {
   const fileEvent = {
     target: fileInput.value,
   };
-  await handleFileUpload(fileEvent as unknown as Event);
+  const picUrl = await handleFileUpload(fileEvent as unknown as Event);
+  if (picUrl) picture.value = picUrl;
 
   await createUser(username.value, fullname.value, bio.value, password.value, picture.value);
   await loginUser(username.value, password.value);

@@ -37,7 +37,8 @@ const getAuthorPic = async () => {
         <div class="post-info">
           <router-link :to="`/account/${props.post.author}`" class="name-link">{{ fullName }}</router-link>
           <p class="username">@{{ props.post.author }}</p>
-          <p class="date">{{ formatDate(props.post.dateCreated) }}</p>
+          <p v-if="props.post.dateCreated !== props.post.dateUpdated" class="date">{{ formatDate(props.post.dateUpdated) }} (Edited)</p>
+          <p v-else class="date">{{ formatDate(props.post.dateCreated) }}</p>
         </div>
       </div>
 
