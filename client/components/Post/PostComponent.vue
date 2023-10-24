@@ -77,7 +77,7 @@ const getAuthorPic = async () => {
   color: black;
   line-height: 0.1;
   margin-bottom: 0;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .username {

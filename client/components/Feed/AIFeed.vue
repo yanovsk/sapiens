@@ -2,8 +2,10 @@
 import { onMounted, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const apiResponse = ref(); // State to hold API response data
-const todaysPost = ref(""); // To store today's message
+const apiResponse = ref();
+const todaysPost = ref("");
+const picLink = ref("");
+const fullName = ref("");
 
 const getAIDailyPost = async () => {
   const response = await fetchy("/api/aiassistant", "GET");
@@ -23,28 +25,61 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
-    <div class="api-response">
-      {{ todaysPost }}
+  <div class="post-container">
+    <div class="post-header">
+      <img src="../../assets/images/ai.png" alt="Profile Picture" class="profile-pic" />
+      <div class="post-info">
+        <p class="name-link">AI Assistant</p>
+
+        <p class="date">{{ new Date().toISOString().split("T")[0] }}</p>
+      </div>
     </div>
+    <p class="post-content">{{ todaysPost }}</p>
   </div>
+  <br />
 </template>
 
-<style>
-.chat-box {
-  max-height: 400px;
-  overflow-y: auto;
+<style scoped>
+.post-container {
+  border: 1.5px solid #d9cafa;
+  background-color: #f6ffdd8a;
+  padding: 16px;
+  border-radius: 4px;
 }
-.user {
-  background-color: #e6e6e6;
-  margin: 5px;
-  padding: 10px;
-  border-radius: 5px;
+.post-header {
+  display: flex;
 }
-.assistant {
-  background-color: #f1f1f1;
-  margin: 5px;
-  padding: 10px;
-  border-radius: 5px;
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+.post-info {
+  display: flex;
+  flex-direction: column;
+}
+.name-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
+  line-height: 0.1;
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+.username {
+  font-weight: 400;
+  line-height: 0.1;
+  margin-bottom: 3px;
+  color: gray;
+}
+.date {
+  font-weight: 400;
+  color: darkgray;
+  font-size: 12px;
+  margin-bottom: 0px;
+}
+.post-content {
+  margin-top: 12px;
 }
 </style>
