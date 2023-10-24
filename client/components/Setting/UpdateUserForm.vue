@@ -6,7 +6,6 @@ import { useUserStore } from "@/stores/user";
 import { handleFileUpload } from "../../utils/handleFileUpload";
 const picture = ref("");
 const fileInput = ref(null);
-
 let username = ref("");
 let password = ref("");
 let fullname = ref("");
