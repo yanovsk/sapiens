@@ -19,10 +19,8 @@ const checkUsername = () => {
   isMyAccount.value = routeUsername === currentUsername.value;
 };
 
-// Existing code
 const posts = ref<Array<{ _id: string }>>([]);
 
-// Existing code
 onBeforeMount(async () => {
   checkUsername();
   await loadPosts();
@@ -52,14 +50,16 @@ const loadPosts = async () => {
 <template>
   <div>
     <template v-if="isMyAccount">
-      <h2>Create a post:</h2>
       <BioComponent :username="currentUsername" />
-      <CreatePostForm />
-      <PostListComponent v-if="posts.length > 0" :posts="posts" :canEdit="isMyAccount" />
+      <br />
+      <CreatePostForm @refreshPosts="loadPosts" />
+      <br />
+      <PostListComponent @refreshPosts="loadPosts" v-if="posts.length > 0" :posts="posts" :canEdit="isMyAccount" />
     </template>
     <template v-else>
       <BioComponent :username="Array.isArray(route.params.username) ? route.params.username[0] : route.params.username" />
-      <PostListComponent v-if="posts.length > 0" :posts="posts" :canEdit="isMyAccount" />
+      <br />
+      <PostListComponent @refreshPosts="loadPosts" v-if="posts.length > 0" :posts="posts" :canEdit="isMyAccount" />
     </template>
   </div>
 </template>

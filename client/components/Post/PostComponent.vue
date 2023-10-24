@@ -30,14 +30,21 @@ const getAuthorPic = async () => {
 <template>
   <div class="post-container">
     <div class="post-header">
-      <router-link :to="`/account/${props.post.author}`">
-        <img :src="picLink" alt="Profile Picture" class="profile-pic" />
-      </router-link>
-      <div class="post-info">
-        <router-link :to="`/account/${props.post.author}`" class="name-link">{{ fullName }}</router-link>
-        <p class="username">@{{ props.post.author }}</p>
-        <p class="date">{{ formatDate(props.post.dateCreated) }}</p>
+      <div class="bio-info">
+        <router-link :to="`/account/${props.post.author}`">
+          <img :src="picLink" alt="Profile Picture" class="profile-pic" />
+        </router-link>
+        <div class="post-info">
+          <router-link :to="`/account/${props.post.author}`" class="name-link">{{ fullName }}</router-link>
+          <p class="username">@{{ props.post.author }}</p>
+          <p class="date">{{ formatDate(props.post.dateCreated) }}</p>
+        </div>
       </div>
+
+      <menu v-if="props.post.author == currentUsername" class="post-actions">
+        <span @click="emit('editPost', props.post._id)" class="edit-action">Edit</span>
+        <span @click="deletePost" class="delete-action">Delete</span>
+      </menu>
     </div>
     <p class="post-content">{{ props.post.content }}</p>
     <hr class="divider" />
@@ -65,7 +72,11 @@ const getAuthorPic = async () => {
   border-radius: 50%;
   margin-right: 12px;
 }
-
+.bio-info {
+  display: flex;
+  flex-direction: row;
+  width: 85%;
+}
 .post-info {
   display: flex;
   flex-direction: column;
@@ -84,7 +95,6 @@ const getAuthorPic = async () => {
   font-weight: 400;
   line-height: 0.1;
   margin-bottom: 3px;
-
   color: gray;
 }
 
@@ -101,7 +111,9 @@ const getAuthorPic = async () => {
 
 .divider {
   margin: 16px 0;
-  color: lightgray;
+  border: none;
+  height: 1px;
+  background-color: #f2f2f2;
 }
 
 .post-tags {
@@ -114,5 +126,32 @@ const getAuthorPic = async () => {
   padding: 3px 5px;
   border-radius: 12px;
   font-size: 12px;
+}
+
+.post-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-top: 5px;
+  gap: 5px;
+}
+
+.edit-action,
+.delete-action {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+  text-decoration: underline;
+  outline: inherit;
+}
+
+.edit-action {
+  color: gray;
+}
+
+.delete-action {
+  color: red;
 }
 </style>

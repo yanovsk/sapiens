@@ -12,6 +12,7 @@ const bio = ref("");
 const picLink = ref("");
 const followers = ref<string[]>([]);
 const following = ref<string[]>([]);
+const currUserFollowing = ref<string[]>([]);
 const isFollowing = ref(false);
 const followTrigger = ref(0);
 
@@ -50,10 +51,19 @@ async function getUserInfo() {
 
 async function getUserFollows() {
   try {
-    const uFollowing = await fetchy(`/api/following/${currentUsername.value}/user`, "GET", {});
-    const uFollowers = await fetchy(`/api/followers/${currentUsername.value}/user`, "GET", {});
+    const uFollowing = await fetchy(`/api/following/${props.username}/user`, "GET", {});
+    const uFollowers = await fetchy(`/api/followers/${props.username}/user`, "GET", {});
     following.value = uFollowing;
     followers.value = uFollowers;
+  } catch (error) {
+    console.error("Error fetching user info: ", error);
+  }
+}
+
+async function getCurrentUserFollowing() {
+  try {
+    const currFollowing = await fetchy(`/api/following/${currentUsername.value}/user`, "GET", {});
+    currUserFollowing.value = currFollowing;
   } catch (error) {
     console.error("Error fetching user info: ", error);
   }
@@ -62,10 +72,11 @@ async function getUserFollows() {
 onMounted(async () => {
   await getUserInfo();
   await getUserFollows();
+  await getCurrentUserFollowing();
   const username = props.username;
   //getting id by username
   const user = await fetchy(`/api/users/${username}`, "GET", {});
-  isFollowing.value = following.value.includes(user._id);
+  isFollowing.value = currUserFollowing.value.includes(user._id);
 });
 
 watch(
@@ -79,17 +90,24 @@ watch(
 
 <template>
   <div class="profile-container">
-    <img :src="picLink" alt="Profile Picture" class="profile-pic" />
-    <div class="profile-info">
-      <h3 class="profile-name">{{ fullName }}</h3>
-      <p class="profile-bio">{{ bio }}</p>
-      <div class="profile-follow">
-        <p class="follow-count">Followers: {{ followers.length }}</p>
-        <p class="follow-count">Following: {{ following.length }}</p>
+    <div class="profile-content">
+      <img :src="picLink" alt="Profile Picture" class="profile-pic" />
+      <div class="profile-info">
+        <div class="name-and-follow">
+          <h3>{{ fullName }}</h3>
+          <p>@{{ props.username }}</p>
+          <p class="profile-bio">{{ bio }}</p>
+        </div>
+        <div class="profile-follow">
+          <p class="follow-count">Followers: {{ followers.length }}</p>
+          <p class="follow-count">Following: {{ following.length }}</p>
+        </div>
       </div>
+    </div>
+    <div class="follow-section">
       <div v-if="props.username !== currentUsername" class="follow-actions">
-        <button v-if="!isFollowing" @click="followUser">Follow</button>
-        <button v-else @click="unfollowUser">Unfollow</button>
+        <button class="global-button-blue" v-if="!isFollowing" @click="followUser">Follow</button>
+        <button class="global-button-green" v-else @click="unfollowUser">Unfollow</button>
       </div>
     </div>
   </div>
@@ -98,46 +116,69 @@ watch(
 <style scoped>
 .profile-container {
   display: flex;
-  align-items: center;
-  border: 1px solid #ccc;
+  align-items: start;
+  border: 2px solid #d9cafa;
   border-radius: 10px;
+  background-color: white;
   padding: 15px;
-  margin: 15px;
 }
-.profile-follow {
+.profile-content {
   display: flex;
-  gap: 10px;
-  font-size: 12px;
-  color: #777;
-  margin-top: 10px;
+  align-items: start;
+  width: 85%;
 }
-.follow-actions {
-  margin-top: 10px;
-}
-.follow-count {
-  margin: 0;
-  padding: 0;
-}
-.profile-pic {
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 15px;
-}
-
 .profile-info {
   display: flex;
   flex-direction: column;
+}
+.name-and-follow {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+p {
+  margin-top: 1px;
 }
 
 .profile-name {
   font-size: 18px;
   font-weight: bold;
 }
-
 .profile-bio {
   font-size: 14px;
   color: #666;
+}
+.profile-follow {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: #000000;
+}
+.follow-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+}
+.follow-actions {
+  display: flex;
+  flex-direction: column;
+}
+.follow-count {
+  margin: 0;
+  padding: 0;
+}
+.profile-pic {
+  height: 27%;
+  width: 27%;
+  border-radius: 0%;
+  object-fit: cover;
+  margin-right: 15px;
 }
 </style>

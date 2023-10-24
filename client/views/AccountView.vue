@@ -4,8 +4,10 @@ import AccountComponent from "@/components/Account/AccountComponent.vue";
 
 <template>
   <main>
-    <section></section>
-    <AccountComponent />
+    <h3 class="global-title">Account</h3>
+    <section class="global-page-layout">
+      <AccountComponent />
+    </section>
   </main>
 </template>
 
