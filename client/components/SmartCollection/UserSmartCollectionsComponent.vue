@@ -36,7 +36,6 @@ onMounted(async () => {
         <div class="smart-collection-tags">
           <span v-for="tag in collection.collectionTags.slice(0, 3)" :key="tag" class="smart-tag">{{ tag }}</span>
         </div>
-        <p>Posts: {{ collection.containedPosts.length }}</p>
       </router-link>
     </div>
   </div>

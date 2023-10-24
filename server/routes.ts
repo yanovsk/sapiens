@@ -256,7 +256,8 @@ class Routes {
     const { allPosts, postsIdandTags } = await Post.getAllPostsOfFollowings(followingsIds);
     const filteredPostsIds = await SmartFeed.getPosts(userId, postsIdandTags);
     const filteredFeed = allPosts.filter((post) => filteredPostsIds.includes(post._id));
-    return await Responses.posts(filteredFeed);
+    const sortedFilteredFeed = filteredFeed.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return await Responses.posts(sortedFilteredFeed);
   }
 
   //update filters and return set of posts based on those filters
@@ -277,7 +278,8 @@ class Routes {
     //getting updated filtered feed and returning it back
     const filteredPostsIds = await SmartFeed.getPosts(userId, postsIdandTags);
     const filteredFeed = allPosts.filter((post) => filteredPostsIds.includes(post._id));
-    return await Responses.posts(filteredFeed);
+    const sortedFilteredFeed = filteredFeed.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return await Responses.posts(sortedFilteredFeed);
   }
 
   //update filters and return set of posts based on those filters
