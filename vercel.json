@@ -5,7 +5,7 @@
   ],
 
   "functions": {
-    "pages/api/**/*.ts": {
+    "/api/**/*.ts": {
       "maxDuration": 200
     }
   }
