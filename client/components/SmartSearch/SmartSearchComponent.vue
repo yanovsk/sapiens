@@ -2,6 +2,7 @@
 import { validateInput } from "@/utils/validators";
 import { onBeforeMount, reactive, ref } from "vue";
 import PostListComponent from "../Post/PostListComponent.vue";
+const isLoading = ref(false);
 
 import { fetchy } from "../../utils/fetchy";
 
@@ -21,8 +22,10 @@ function performValidation() {
 
 async function searchAccount() {
   errorMessage.value = "";
+  isLoading.value = true;
   const res = await fetchy(`/api/search/${props.username}`, "POST", { body: { userQuery: inputValue.value } });
   posts.value = res;
+  isLoading.value = false;
 }
 </script>
 
@@ -37,6 +40,8 @@ async function searchAccount() {
       <input v-model="inputValue" :placeholder="'Search for anything in @' + props.username + '\'s feed'" required />
       <button class="global-button-blue local-btn" @click="performValidation() && searchAccount()">Search</button>
     </div>
+    <div class="pulsate" v-if="isLoading">Searching...</div>
+
     <div v-if="posts">
       <PostListComponent v-if="posts.length > 0" :posts="posts" :canEdit="false" />
     </div>

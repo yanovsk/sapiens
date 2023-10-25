@@ -30,7 +30,7 @@ onBeforeMount(async () => {
           <img src="@/assets/images/sapiens-logo.png" />
         </div>
         <div class="nav-buttons">
-          <p @click="$router.push({ name: 'Feed' })" :class="{ active: currentRouteName == 'Feed' }">Feed</p>
+          <p @click="$router.push({ name: 'Feed' })" :class="{ active: currentRouteName == 'Feed' }">SmartFeed</p>
           <p @click="$router.push({ name: 'SmartCollections' })" :class="{ active: currentRouteName == 'SmartCollections' }">SmartCollections</p>
           <p @click="$router.push({ name: 'AIAssistant' })" :class="{ active: currentRouteName == 'AIAssistant' }">AI Assistant</p>
           <p @click="$router.push(`/account/${currentUsername}`)" :class="{ active: currentRouteName == 'Account' }">My Account</p>
