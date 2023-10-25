@@ -7,15 +7,20 @@ import { fetchy } from "../../utils/fetchy";
 const apiResponse = ref();
 const todayMessage = ref("");
 const dayOfWeek = ref(1); // Initialize with Monday
+const dayOfLearning = ref(0);
 
 const getAIAssistantDash = async () => {
   const response = await fetchy("/api/aiassistant", "GET");
   apiResponse.value = response.dailyPostsAndMsgs;
+  console.log("resp", apiResponse.value);
 
   const today = new Date();
   dayOfWeek.value = (today.getUTCDay() === 0 ? 7 : today.getUTCDay()) - 1;
   const todayISO = today.toISOString().split("T")[0];
+
   const todayData = apiResponse.value.find((item: any) => item.date.startsWith(todayISO));
+  const todayIndex = apiResponse.value.findIndex((item: any) => item.date.startsWith(todayISO));
+  dayOfLearning.value = todayIndex + 1;
 
   if (todayData) {
     todayMessage.value = todayData.dailyMessage;
@@ -33,7 +38,7 @@ onMounted(async () => {
   <div v-if="todayMessage">
     <h3>Current Learning Cycle</h3>
     <p>
-      Day <b>{{ dayOfWeek }} </b> out of 7
+      Day <b>{{ dayOfLearning }} </b> out of 7
     </p>
     <div class="post-container">
       <div class="container-left-side">
