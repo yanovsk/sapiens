@@ -336,14 +336,8 @@ class Routes {
 
     //calling search action
     const resultsPostIds = await SmartSearch.search(userId, searchedUser._id, userQuery, postsIdandTags, tagsToFind);
-
-    const results = await Promise.all(
-      resultsPostIds.map(async (id) => {
-        return await Post.getPostById(id);
-      }),
-    );
-
-    return results;
+    const posts = await Post.getPostsById(resultsPostIds);
+    return await Responses.posts(posts);
   }
 
   @Router.get("/search/history")

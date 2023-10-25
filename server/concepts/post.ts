@@ -35,7 +35,7 @@ export default class PostConcept {
   }
 
   async getPostById(postId: ObjectId) {
-    const posts = await this.posts.readOne({ postId });
+    const posts = await this.posts.readOne({ _id: postId });
     if (!posts) {
       throw new NotFoundError(`Post with ID ${postId} not found.`);
     }

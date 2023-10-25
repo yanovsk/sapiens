@@ -2,20 +2,18 @@
 import AIFeed from "@/components/Feed/AIFeed.vue";
 import { fetchy } from "@/utils/fetchy";
 import { validateInput } from "@/utils/validators";
-import { onBeforeMount, reactive, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import PostListComponent from "../Post/PostListComponent.vue";
 
 const loaded = ref(false);
+const inputValue = ref("");
+
 let posts = ref<Array<Record<string, string>>>([]);
 const errorMessage = ref("");
 
-const state = reactive({
-  inputValue: "",
-});
-
 async function updateFeedPreference() {
   loaded.value = false;
-  let userQuery = state.inputValue;
+  let userQuery = inputValue.value;
 
   let query: Record<string, string> = { userQuery };
   try {
@@ -47,7 +45,7 @@ async function resetFeed() {
 }
 
 function performValidation() {
-  const { isValid, message } = validateInput(state.inputValue);
+  const { isValid, message } = validateInput(inputValue.value);
   if (!isValid) {
     errorMessage.value = isValid ? "" : message;
   }
@@ -69,7 +67,7 @@ onBeforeMount(async () => {
       </div>
 
       <div class="input-container">
-        <input v-model="state.inputValue" placeholder="Personalize your feed: e.g., 'Don't show AI-related posts'" required />
+        <input v-model="inputValue" placeholder="Personalize your feed: e.g., 'Don't show AI-related posts'" required />
         <button class="global-button-blue local-btn" @click="performValidation() && updateFeedPreference()">Submit</button>
       </div>
       <span class="error-message">{{ errorMessage }}</span>

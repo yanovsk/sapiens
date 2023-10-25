@@ -123,6 +123,11 @@ h6 {
   color: red;
 }
 
+.global-button-blue-border {
+  background-color: transparent;
+  border-color: #d9cafa;
+}
+
 .smart-collection-block {
   border: 1px solid #ccc;
   padding: 15px;
