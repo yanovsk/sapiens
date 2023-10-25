@@ -119,7 +119,6 @@ input {
   padding: 8px 16px;
   border: 0.3px solid lightgray;
   border-radius: 4px;
-  cursor: pointer;
 }
 
 .user {

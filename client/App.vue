@@ -92,7 +92,6 @@ a {
 }
 
 .nav-buttons p {
-  cursor: pointer;
   padding: 0.5em;
   width: 100%;
   border-bottom: 1px solid #ccc;

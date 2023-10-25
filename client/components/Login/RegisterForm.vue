@@ -108,7 +108,6 @@ button[type="submit"] {
   border-color: black;
   font-weight: 550;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 button[type="submit"]:hover {

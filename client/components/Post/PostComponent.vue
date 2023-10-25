@@ -139,7 +139,6 @@ const getAuthorPic = async () => {
 
 .edit-action,
 .delete-action {
-  cursor: pointer;
   border: none;
   background: none;
   padding: 0;

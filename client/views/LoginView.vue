@@ -85,7 +85,6 @@ const showRegister = ref(false);
   border-color: black;
   font-weight: 550;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .feature-list {

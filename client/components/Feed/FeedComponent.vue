@@ -112,7 +112,6 @@ onBeforeMount(async () => {
   padding: 0;
   color: rgb(158, 6, 6);
   text-decoration: underline;
-  cursor: pointer;
   font-size: 14px;
 }
 

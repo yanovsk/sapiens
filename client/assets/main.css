@@ -79,7 +79,6 @@ h6 {
   border-color: black;
   font-weight: 550;
   border-radius: 5px;
-  cursor: pointer;
 }
 .global-button-blue-border {
   background-color: #d9cafa;
@@ -90,7 +89,6 @@ h6 {
   border-color: black;
   font-weight: 550;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .global-button-green {
@@ -102,7 +100,6 @@ h6 {
   border-color: black;
   font-weight: 550;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .global-button {
@@ -114,7 +111,6 @@ h6 {
   border-color: black;
   font-weight: 550;
   border-radius: 5px;
-  cursor: pointer;
 }
 
 .global-button-red-border {

@@ -7,7 +7,6 @@ import AIAssistantView from "../views/AIAssistant.vue";
 import AccountView from "../views/AccountView.vue";
 import FeedView from "../views/FeedView.vue";
 import LoginView from "../views/LoginView.vue";
-import NotFoundView from "../views/NotFoundView.vue";
 import SettingView from "../views/SettingView.vue";
 import SingleSmartCollectionView from "../views/SingleSmartCollectionView.vue";
 import SmartCollectionsView from "../views/SmartCollectionsView.vue";
@@ -66,7 +65,7 @@ const router = createRouter({
     {
       path: "/:catchAll(.*)",
       name: "not-found",
-      component: NotFoundView,
+      component: LoginView,
     },
   ],
 });
